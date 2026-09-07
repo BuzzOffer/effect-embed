@@ -2,8 +2,9 @@ import pool from "../config/database.ts";
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (reqBody: any) => {
     try {
+        const { email, password } = reqBody
         const { rows: result } = await pool.query(`SELECT id, username, email, password, role FROM users WHERE email = $1`, [email])
 
         if (result.length === 0) {
@@ -42,7 +43,7 @@ export const loginUser = async (email: string, password: string) => {
 
         return {
             success: true,
-            message: 'Login service successful',
+            message: 'Successfully logged in user',
             data: {
                 user: {
                     id: authUser.id,
@@ -57,7 +58,7 @@ export const loginUser = async (email: string, password: string) => {
     } catch (error) {
         return {
             success: false,
-            message: "Login service error",
+            message: "Login service error: " + error,
             error
         }
     }
