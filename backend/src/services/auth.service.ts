@@ -63,3 +63,45 @@ export const loginUser = async (reqBody: any) => {
         }
     }
 }
+
+export const registerUser = async (reqBody: any) => {
+    try {
+        const { username, email, password, role } = reqBody;
+        const checkEmailResult = await pool.query(`SELECT id, username, email, role, created_at FROM users WHERE email = $1`, [email]);
+        if (checkEmailResult.rowCount !== 0) {
+            return {
+                success: false,
+                message: "Email is already registered",
+                error: "Email is already registered"
+            }
+        }
+
+        const hash = await argon2.hash(password);
+
+        const registerResult = await pool.query(`INSERT INTO users (username, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, username, email, role, created_at`,
+            [username, email, hash, role]
+        )
+
+        const registeredUser = registerResult.rows[0]
+
+        if (registerResult.rowCount === 0) {
+            return {
+                success: false,
+                message: "Error registering user",
+                error: "Error registering user"
+            }
+        }
+
+        return {
+            success: true,
+            message: "User registered successfully",
+            data: registeredUser
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Register user service error",
+            error: "Register user service error"
+        }
+    }
+}
