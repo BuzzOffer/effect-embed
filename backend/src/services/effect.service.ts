@@ -1,7 +1,7 @@
+import type { PoolClient } from "pg"
 import pool from "../config/database.ts"
 
-export const getEffectsService = async () => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const getEffectsService = async (dbClient: PoolClient) => {
     try {
         const result = await dbClient.query(`SELECT * FROM effects`)
         const effectList = result.rows
@@ -27,8 +27,6 @@ export const getEffectsService = async () => {
             message: "Get effect service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
 

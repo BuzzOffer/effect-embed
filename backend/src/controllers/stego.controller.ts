@@ -1,17 +1,18 @@
 import type { Request, Response } from "express";
 import { createStegoLogService, deleteStegoLogService, getStegoLogByIdService, getStegoLogsService } from "../services/stego.service.ts";
 import { errorResponse, successResponse } from "../utils/response.ts";
+import { queryWithRls } from "../utils/db.ts";
 
 export const getStegoLogs = async (req: Request, res: Response) => {
     try {
-        const result = await getStegoLogsService()
+        const result = await queryWithRls(req.user, getStegoLogsService)
         if (!result.success) {
             return errorResponse(res, result.message, 400, result.error)
         }
 
         return successResponse(res, { stego_log: result.data }, result.message)
     } catch (error) {
-        return errorResponse(res, "Get Stego logs controller error", 400, error)
+        return errorResponse(res, "Get Stego logs controller error" + error, 400, error)
     }
 }
 

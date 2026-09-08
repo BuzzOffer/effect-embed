@@ -1,7 +1,7 @@
+import type { PoolClient } from "pg"
 import pool from "../config/database.ts"
 
-export const getStegoLogsService = async () => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const getStegoLogsService = async (dbClient: PoolClient) => {
     try {
         const result = await dbClient.query(`SELECT stego_log.*, effects.name as effect_name
             FROM stego_log
@@ -25,11 +25,9 @@ export const getStegoLogsService = async () => {
     } catch (error) {
         return {
             success: false,
-            message: "Get stego log service error",
+            message: "Get stego log service error" + error,
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
 
