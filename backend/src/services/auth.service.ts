@@ -36,7 +36,7 @@ export const loginUser = async (reqBody: any) => {
         }
 
         const token = jwt.sign(
-            {id: authUser.id, email: authUser.email, role: authUser.role},
+            {id: authUser.id, role: authUser.role},
             jwtSecret, 
             { expiresIn: '7d' }
         )
