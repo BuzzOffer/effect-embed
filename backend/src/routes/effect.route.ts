@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createEffect, deleteEffect, getEffects, updateEffect } from "../controllers/effect.controller.ts";
+import { authenticateJWT } from "../middleware/auth.middleware.ts";
 
 const router = Router()
 
@@ -8,7 +9,7 @@ const router = Router()
  * @description Get all effect logs
  * @access Private
  */
-router.get('/', getEffects);
+router.get('/', authenticateJWT, getEffects);
 
 /**
  * @route POST /api/effects/create
@@ -18,7 +19,7 @@ router.get('/', getEffects);
 // {
 //     "name": "name"
 // }
-router.post('/create', createEffect);
+router.post('/create', authenticateJWT, createEffect);
 
 /**
  * @route PUT /api/effects/:id
@@ -28,13 +29,13 @@ router.post('/create', createEffect);
 // {
 //     "name": "name"
 // }
-router.put('/:id', updateEffect);
+router.put('/:id', authenticateJWT, updateEffect);
 
 /**
  * @route DELETE /api/effects/:id
  * @description Create effect
  * @access Private
  */
-router.delete('/:id', deleteEffect);
+router.delete('/:id', authenticateJWT, deleteEffect);
 
 export default router

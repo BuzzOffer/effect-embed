@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createStegoLog, deleteStegoLog, getStegoLogById, getStegoLogs } from "../controllers/stego.controller.ts";
+import { authenticateJWT } from "../middleware/auth.middleware.ts";
 
 const router = Router()
 
@@ -8,14 +9,14 @@ const router = Router()
  * @description Get all stego logs
  * @access Private
  */
-router.get('/', getStegoLogs);
+router.get('/', authenticateJWT, getStegoLogs);
 
 /**
  * @route GET /api/stego/:id
  * @description Get stego log by id
  * @access Private
  */
-router.get('/:id', getStegoLogById);
+router.get('/:id', authenticateJWT, getStegoLogById);
 
 /**
  * @route POST /api/stego/create
@@ -28,13 +29,13 @@ router.get('/:id', getStegoLogById);
 //     "type": "embed | extract",
 //     "time_taken": "time_taken"
 // }
-router.post('/create', createStegoLog);
+router.post('/create', authenticateJWT, createStegoLog);
 
 /**
  * @route DELETE /api/stego/:id
  * @description Delete stego log
  * @access Private
  */
-router.delete('/:id', deleteStegoLog);
+router.delete('/:id', authenticateJWT, deleteStegoLog);
 
 export default router
