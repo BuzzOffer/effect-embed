@@ -24,7 +24,7 @@ export const getStegoLogById = async (req: Request<{id: string}>, res: Response)
             return errorResponse(res, "No Stego Log ID provided", 400, "Stego Log ID is required")
         }
 
-        const result = await getStegoLogByIdService(id)
+        const result = await queryWithRls(req.user, getStegoLogByIdService, id)
         if (!result.success) {
             return errorResponse(res, result.message, 400, result.error)
         }
@@ -39,7 +39,7 @@ export const createStegoLog = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body
 
-        const result = await createStegoLogService(reqBody)
+        const result = await queryWithRls(req.user, createStegoLogService, reqBody)
         
         if (!result.success) {
             return errorResponse(res, result.message, 400, result.error)
@@ -55,7 +55,7 @@ export const deleteStegoLog = async (req: Request<{id: string}>, res: Response) 
     try {
         const { id } = req.params
 
-        const result = await deleteStegoLogService(id)
+        const result = await queryWithRls(req.user, deleteStegoLogService, id)
         
         if (!result.success) {
             return errorResponse(res, result.message, 400, result.error)

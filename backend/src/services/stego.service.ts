@@ -1,5 +1,4 @@
 import type { PoolClient } from "pg"
-import pool from "../config/database.ts"
 
 export const getStegoLogsService = async (dbClient: PoolClient) => {
     try {
@@ -31,24 +30,15 @@ export const getStegoLogsService = async (dbClient: PoolClient) => {
     }
 }
 
-export const getStegoLogByIdService = async (id: string) => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const getStegoLogByIdService = async (dbClient: PoolClient, id: string) => {
     try {
-        const result = await dbClient.query(`SELECT stego_log.*, effects.name as effect_name
+        const result = await dbClient.query(`SELECT stego_log.*, users.username as user_name, users.email, effects.name as effect_name
             FROM stego_log
             INNER JOIN effects ON effect_id = effects.id
-            WHERE id = $1`, [id])
+            INNER JOIN users ON user_id = users.id
+            WHERE stego_log.id = $1`, [id])
         const stegoLogList = result.rows[0]
 
-        const formattedLog = {
-            id: stegoLogList.id,
-            user_id: stegoLogList.user_id,
-            effect_id: stegoLogList.effect_id,
-            effect_name: stegoLogList.effect_name,
-            type: stegoLogList.type,
-            time_taken: stegoLogList.time_taken,
-            created_at: stegoLogList.created_at
-        }
         if (result.rowCount == 0) {
             return {
                 success: false,
@@ -57,6 +47,18 @@ export const getStegoLogByIdService = async (id: string) => {
             }
         }
 
+        const formattedLog = {
+            id: stegoLogList.id,
+            user_id: stegoLogList.user_id,
+            user_name: stegoLogList.user_name,
+            email: stegoLogList.email,
+            effect_id: stegoLogList.effect_id,
+            effect_name: stegoLogList.effect_name,
+            type: stegoLogList.type,
+            time_taken: stegoLogList.time_taken,
+            created_at: stegoLogList.created_at
+        }
+        
         return {
             success: true,
             message: "Get stego log service successful",
@@ -68,13 +70,10 @@ export const getStegoLogByIdService = async (id: string) => {
             message: "Get stego log service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
 
-export const createStegoLogService = async (reqBody: any) => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const createStegoLogService = async (dbClient: PoolClient, reqBody: any) => {
     try {
         const { user_id, effect_name, type, time_taken } = reqBody
         const effectsResult = await dbClient.query(`SELECT * FROM effects WHERE name = $1`, [effect_name])
@@ -110,15 +109,12 @@ export const createStegoLogService = async (reqBody: any) => {
             message: "Create stego log service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
 
-export const deleteStegoLogService = async (id: string) => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const deleteStegoLogService = async (dbClient: PoolClient, id: string) => {
     try {
-        const result = await dbClient.query(`DELETE FROM stego_log WHERE id = $1`, [id])
+        const result = await dbClient.query(`DELETE FROM stego_log WHERE id = $1 RETURNING *`, [id])
 
         const deletedStegoLog = result.rows[0]
 
@@ -141,7 +137,5 @@ export const deleteStegoLogService = async (id: string) => {
             message: "Delete stego log service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
