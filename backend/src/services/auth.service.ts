@@ -1,11 +1,11 @@
-import pool from "../config/database.ts";
+import { poolAdmin } from "../config/database.ts";
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 
 export const loginUser = async (reqBody: any) => {
     try {
         const { email, password } = reqBody
-        const { rows: result } = await pool.query(`SELECT id, username, email, password, role FROM users WHERE email = $1`, [email])
+        const { rows: result } = await poolAdmin.query(`SELECT id, username, email, password, role FROM users WHERE email = $1`, [email])
 
         if (result.length === 0) {
             return {
@@ -67,7 +67,7 @@ export const loginUser = async (reqBody: any) => {
 export const registerUser = async (reqBody: any) => {
     try {
         const { username, email, password, role } = reqBody;
-        const checkEmailResult = await pool.query(`SELECT id, username, email, role, created_at FROM users WHERE email = $1`, [email]);
+        const checkEmailResult = await poolAdmin.query(`SELECT id, username, email, role, created_at FROM users WHERE email = $1`, [email]);
         if (checkEmailResult.rowCount !== 0) {
             return {
                 success: false,
@@ -78,7 +78,7 @@ export const registerUser = async (reqBody: any) => {
 
         const hash = await argon2.hash(password);
 
-        const registerResult = await pool.query(`INSERT INTO users (username, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, username, email, role, created_at`,
+        const registerResult = await poolAdmin.query(`INSERT INTO users (username, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, username, email, role, created_at`,
             [username, email, hash, role]
         )
 
