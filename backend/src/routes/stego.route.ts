@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createStegoLog, deleteStegoLog, getStegoLogById, getStegoLogs } from "../controllers/stego.controller.ts";
-import { authenticateJWT } from "../middleware/auth.middleware.ts";
+import { authenticateJWT, requireRole } from "../middleware/auth.middleware.ts";
 
 const router = Router()
 
@@ -36,6 +36,6 @@ router.post('/create', authenticateJWT, createStegoLog);
  * @description Delete stego log
  * @access Private
  */
-router.delete('/:id', authenticateJWT, deleteStegoLog);
+router.delete('/:id', authenticateJWT, requireRole('admin'), deleteStegoLog);
 
 export default router

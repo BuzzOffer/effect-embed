@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createEffect, deleteEffect, getEffects, updateEffect } from "../controllers/effect.controller.ts";
-import { authenticateJWT } from "../middleware/auth.middleware.ts";
+import { authenticateJWT, requireRole } from "../middleware/auth.middleware.ts";
 
 const router = Router()
 
@@ -9,7 +9,7 @@ const router = Router()
  * @description Get all effect logs
  * @access Private
  */
-router.get('/', authenticateJWT, getEffects);
+router.get('/', authenticateJWT, requireRole('admin'), getEffects);
 
 /**
  * @route POST /api/effects/create
