@@ -12,7 +12,7 @@ declare global {
     }
 }
 
-export const authenticateJWT = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
     //extract token from auth header
     const authHeader = req.headers.authorization;
     const token = authHeader ? authHeader.split(' ')[1] : null;
@@ -28,5 +28,21 @@ export const authenticateJWT = async (req: Request, res: Response, next: NextFun
         next()
     } catch (error) {
         return errorResponse(res, "Error during authentication", 403)
+    }
+}
+
+export const requireRole = (...allowedRoles: string[]) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const userInfo = req.user;
+
+        if (!userInfo) {
+            return unauthorizedResponse(res, "Authentication required");
+        }
+
+        if (!allowedRoles.includes(userInfo.role)) {
+            return unauthorizedResponse(res, "This role does not have permission");
+        }
+
+        next();
     }
 }
