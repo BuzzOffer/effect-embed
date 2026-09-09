@@ -15,8 +15,8 @@ const router = Router()
 router.post('/login', login);
 
 /**
- * @route POST /api/auth/login
- * @description Login user
+ * @route POST /api/auth/register
+ * @description Register user
  * @access Public
  */
 // {
