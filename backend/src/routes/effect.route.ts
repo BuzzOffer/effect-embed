@@ -19,23 +19,23 @@ router.get('/', authenticateJWT, requireRole('admin'), getEffects);
 // {
 //     "name": "name"
 // }
-router.post('/create', authenticateJWT, createEffect);
+router.post('/create', authenticateJWT, requireRole('admin'), createEffect);
 
 /**
  * @route PUT /api/effects/:id
- * @description Create effect
+ * @description Update effect
  * @access Private
  */
 // {
 //     "name": "name"
 // }
-router.put('/:id', authenticateJWT, updateEffect);
+router.put('/:id', authenticateJWT, requireRole('admin'), updateEffect);
 
 /**
  * @route DELETE /api/effects/:id
- * @description Create effect
+ * @description Delete effect
  * @access Private
  */
-router.delete('/:id', authenticateJWT, deleteEffect);
+router.delete('/:id', authenticateJWT, requireRole('admin'), deleteEffect);
 
 export default router

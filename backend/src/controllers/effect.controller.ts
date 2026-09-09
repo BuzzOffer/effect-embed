@@ -19,7 +19,7 @@ export const getEffects = async (req: Request, res: Response) => {
 export const createEffect = async (req: Request, res: Response) => {
     try {
         const reqBody = req.body
-        const result = await createEffectService(reqBody)
+        const result = await queryWithRls(req.user, createEffectService, reqBody)
         if (!result.success) {
             return errorResponse(res, result.message, 400, result.error)
         }
@@ -34,7 +34,7 @@ export const updateEffect = async (req: Request<{id: string}>, res: Response) =>
     try {
         const { id } = req.params
         const reqBody = req.body
-        const result = await updateEffectService(id, reqBody)
+        const result = await queryWithRls(req.user, updateEffectService, id, reqBody)
         if (!result.success) {
             return errorResponse(res, result.message, 400, result.error)
         }
@@ -48,7 +48,7 @@ export const updateEffect = async (req: Request<{id: string}>, res: Response) =>
 export const deleteEffect = async (req: Request<{id: string}>, res: Response) => {
     try {
         const { id } = req.params
-        const result = await deleteEffectService(id)
+        const result = await queryWithRls(req.user, deleteEffectService, id)
         if (!result.success) {
             return errorResponse(res, result.message, 400, result.error)
         }
