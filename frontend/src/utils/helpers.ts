@@ -41,6 +41,27 @@ export const snakeToTitle = (str: string): string => {
     return str.split('_').map(word => capitalizeString(word)).join(' ')
 }
 
-export const toSnakeCase = (str: string) : string => {
+export const toSnakeCase = (str: string): string => {
     return str.toLowerCase().replace(/ /g, "_")
+}
+
+export const isTokenExpired = (token: string): boolean => {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url?.replace(/-/g, '+').replace(/_/g, '/');
+
+        if (!base64) {
+            return true;
+        }
+        
+        const payload = JSON.parse(atob(base64));
+        if (!payload.exp) {
+            return true;
+        }
+
+        const currentTime = Date.now() / 1000;
+        return payload.exp < currentTime;
+    } catch {
+        return true;
+    }
 }
