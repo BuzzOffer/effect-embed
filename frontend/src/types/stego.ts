@@ -23,10 +23,3 @@ export interface StegoLogResponse {
         stego_log: StegoLog
     }
 }
-
-export interface StegoLogCreation {
-    user_id: string;
-    effect_id: string;
-    type: string;
-    time_taken: string;
-}
