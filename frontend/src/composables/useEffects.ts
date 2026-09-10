@@ -12,7 +12,7 @@ export function useEffects() {
 
     const handleError = (err: any) => {
         error.value = err instanceof Error ? err.message: 'An unexpected error occured';
-        console.error('Effect Log API error: ', err)
+        console.error('Effects API error: ', err)
     }
 
     const fetchEffects = async (): Promise<void> => {
