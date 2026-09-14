@@ -1,7 +1,43 @@
 @import "tailwindcss";
 
+:root {
+    --color-background: #FFFFFF;
+    --color-surface: #F0F7F4;
+    --color-text: #252D26;
+    --color-text-on-primary: #F0F7F4;
+    --color-primary: #A2E3C4;
+    --color-primary-light: #C0ECD7;
+    --color-primary-var: #133F2A;
+    --color-secondary: #34ADA9;
+    --color-secondary-var: #1C5E5C;
+}
+
+[data-theme="dark"] {
+    --color-background: #1C221D;
+    --color-surface: #252D26;
+    --color-text: #F0F7F4;
+    --color-text-on-primary: #252D26;
+    --color-primary: #133F2A;
+    --color-primary-light: #216E49;
+    --color-primary-var: #A2E3C4;
+    --color-secondary: #1C5E5C;
+    --color-secondary-var: #34ADA9;
+}
+
+@theme {
+    --color-background: rgb(var(--color-background));
+    --color-surface: rgb(var(--color-surface));
+    --color-primary: rgb(var(--color-primary));
+    --color-primary-light: rgb(var(--color-primary-light));
+    --color-primary-var: rgb(var(--color-primary-var));
+    --color-secondary: rgb(var(--color-secondary));
+    --color-secondary-var: rgb(var(--color-secondary-var));
+    --color-text-base: rgb(var(--color-text));
+    --color-text-on-primary: rgb(var(--color-text-on-primary));
+}
+
 .page-header {
-    @apply text-2xl font-bold
+    @apply text-2xl font-bold text-text-base
 }
 
 .view-base {
@@ -9,15 +45,15 @@
 }
 
 .input-base {
-    @apply bg-slate-50 border-2 border-slate-200 focus:border-slate-800 rounded-xl px-4 py-2
+    @apply bg-surface border-2 border-surface focus:border-primary-var rounded-xl px-4 py-2
 }
 
 .table-cell {
-    @apply border border-slate-300 p-4
+    @apply border border-primary-light p-4
 }
 
 .button-base {
-    @apply px-4 py-1 w-fit text-slate-50 bg-slate-800 hover:bg-slate-800/80 active:bg-slate-800/90 rounded-lg text-lg
+    @apply px-4 py-1 w-fit text-text-on-primary bg-primary-var hover:bg-primary-var/80 active:bg-primary-var/90 rounded-lg text-lg
 }
 
 .secondary-button-base {
