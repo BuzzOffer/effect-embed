@@ -10,6 +10,8 @@
     --color-primary-var: #133F2A;
     --color-secondary: #34ADA9;
     --color-secondary-var: #1C5E5C;
+    --color-error: #D82C2C;
+    --color-error-var: #EFA9A9;
 }
 
 [data-theme="dark"] {
@@ -22,6 +24,8 @@
     --color-primary-var: #A2E3C4;
     --color-secondary: #1C5E5C;
     --color-secondary-var: #34ADA9;
+    --color-error: #EFA9A9;
+    --color-error-var: #D82C2C;
 }
 
 @theme {
@@ -34,6 +38,8 @@
     --color-secondary-var: rgb(var(--color-secondary-var));
     --color-text-base: rgb(var(--color-text));
     --color-text-on-primary: rgb(var(--color-text-on-primary));
+    --color-error: rgb(var(--color-error));
+    --color-error-var: rgb(var(--color-error-var));
 }
 
 .page-header {
@@ -53,13 +59,17 @@
 }
 
 .button-base {
-    @apply px-4 py-1 w-fit text-text-on-primary bg-primary-var hover:bg-primary-var/80 active:bg-primary-var/90 rounded-lg text-lg
+    @apply px-4 py-1 w-fit text-text-on-primary bg-primary-var hover:bg-primary-var/80 active:bg-primary-var/90 rounded-lg text-lg cursor-pointer
 }
 
 .secondary-button-base {
-    @apply px-4 py-1 w-fit bg-slate-200 hover:bg-slate-300 active:bg-slate-400 rounded-lg text-lg
+    @apply px-4 py-1 w-fit text-text-base bg-primary-light hover:bg-primary-light/80 active:bg-primary-light/90 rounded-lg text-lg cursor-pointer
 }
 
 .red-button-base {
-    @apply px-4 py-1 w-fit text-white bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-lg text-lg
+    @apply px-4 py-1 w-fit text-white bg-error hover:bg-error/80 active:bg-error/90 rounded-lg text-lg cursor-pointer
+}
+
+.dialog-base {
+    @apply bg-surface fixed inset-0 m-auto h-fit w-[min(90%,28rem)] rounded-lg p-6 shadow-lg backdrop:bg-black/40
 }
