@@ -12,7 +12,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="effect in sortedEmbedEffects" :key="effect.id" class="border border-slate-800">
+                        <tr v-for="effect in sortedEmbedEffects" :key="effect.id" class="border">
                             <td class="table-cell">{{ capitalizeString(effect.name) }}</td>
                             <td class="table-cell">{{ effect.avg_embed_time }}</td>
                         </tr>
@@ -23,13 +23,13 @@
                 <h2 class="font-semibold text-lg mb-2">Best Performing Effects (Extract)</h2>
                 <table class="border border-background bg-surface">
                     <thead class="bg-primary">
-                        <tr class="border border-slate-800">
+                        <tr class="border">
                             <th class="table-cell">Effect</th>
                             <th class="table-cell">Avg Time (ms)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="effect in sortedExtractEffects" :key="effect.id" class="border border-slate-800">
+                        <tr v-for="effect in sortedExtractEffects" :key="effect.id" class="border">
                             <td class="table-cell">{{ capitalizeString(effect.name) }}</td>
                             <td class="table-cell">{{ effect.avg_extract_time }}</td>
                         </tr>
