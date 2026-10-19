@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.hilt.android)
     implementation(libs.androidx.compose.ui.text.google.fonts)
+    implementation(libs.androidx.datastore)
+    implementation(libs.kotlinx.serialization.json)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     testImplementation(libs.junit)
