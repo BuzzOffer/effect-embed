@@ -6,8 +6,12 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import com.example.effectembed.auth.model.UserInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
 
 suspend fun saveToGallery(context: Context, bitmap: Bitmap): Boolean {
     return withContext(Dispatchers.IO) {
@@ -42,5 +46,20 @@ suspend fun saveToGallery(context: Context, bitmap: Bitmap): Boolean {
             }
             false
         }
+    }
+}
+
+fun extractUserInfo(data: Any?): UserInfo? {
+    try {
+        //cast dynamic data to a JsonElement
+        val jsonElement = data as? JsonElement ?: return null
+        val jsonObject = jsonElement.jsonObject
+        //look for the user key
+        val userJson = jsonObject["user"] ?: return null
+
+        return Json.decodeFromJsonElement<UserInfo>(UserInfo.serializer(), userJson)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return null
     }
 }
