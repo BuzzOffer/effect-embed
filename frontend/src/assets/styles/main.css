@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Spline+Sans:wght@300..700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -40,6 +41,8 @@
     --color-text-on-primary: rgb(var(--color-text-on-primary));
     --color-error: rgb(var(--color-error));
     --color-error-var: rgb(var(--color-error-var));
+    /* --font-body: "Spline Sans", sans-serif; */
+    --font-body: "Albert Sans", sans-serif;
 }
 
 .page-header {
@@ -47,7 +50,7 @@
 }
 
 .view-base {
-    @apply flex flex-col p-6 sm:p-10 max-w-full min-h-screen
+    @apply flex flex-col p-6 sm:p-10 max-w-full min-h-screen font-body
 }
 
 .input-base {
