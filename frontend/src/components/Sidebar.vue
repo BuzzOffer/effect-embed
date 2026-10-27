@@ -42,6 +42,10 @@ const routes = ref([
         path: '/effects',
         name: 'Effects'
     },
+    {
+        path: '/tests',
+        name: 'Testing'
+    },
 ])
 
 const logout = () => {
