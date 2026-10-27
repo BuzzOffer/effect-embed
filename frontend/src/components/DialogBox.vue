@@ -1,5 +1,5 @@
 <template>
-    <dialog ref="dialogRef" class="dialog-base" @cancel.prevent="cancel">
+    <dialog ref="dialogRef" class="dialog-base font-body" @cancel.prevent="cancel">
         <h2 class="text-2xl font-bold m-2">
             {{ title }}
         </h2>
