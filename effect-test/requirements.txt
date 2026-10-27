@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+numpy
+scipy
+scikit-image
+celery
+opencv-python
+Pillow
+pydantic-settings
