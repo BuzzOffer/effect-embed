@@ -7,6 +7,9 @@ def apply_jpeg_compression(image_bytes: bytes, quality: int) -> bytes:
     img = Image.open(io.BytesIO(image_bytes))
     output_buffer = io.BytesIO()
 
+    if img.mode in ("RGBA", "P"):
+        img = img.convert("RGB")
+
     img.save(output_buffer, format="JPEG", quality=quality)
     return output_buffer.getvalue()
 

@@ -13,8 +13,8 @@ class GlitchDecoder(BaseDecoder):
         height, width, channels = img_np.shape
         total_pixels = width * height
 
-        modified_cols = []
-        modified_px = []
+        modified_cols = [False] * width
+        modified_px = [False] * total_pixels
 
         extracted_bytes = bytearray()
         current_byte = 0
@@ -29,14 +29,14 @@ class GlitchDecoder(BaseDecoder):
                 if modified_px[pixel_index]:
                     continue
 
-                avg_px_value = (red + green + blue) / 3
+                avg_px_value = (int(red) + int(green) + int(blue)) // 3
                 if avg_px_value >= threshold:
                     modified_px[pixel_index] = True
                     x = pixel_index % width
                     if not modified_cols[x]:
                         count = 0
                         vertical_index = y + 1
-                        while y < height:
+                        while vertical_index < height:
                             next_px = img_np[vertical_index, x]
                             if (next_px == current_pixel).all():
                                 count += 1
@@ -59,3 +59,13 @@ class GlitchDecoder(BaseDecoder):
                                 current_byte = 0
                         modified_cols[x] = True
         return extracted_bytes
+
+def get_decoder(effect_type: str) -> BaseDecoder:
+    decoders = {
+        "glitch": GlitchDecoder()
+    }
+
+    if effect_type not in decoders:
+        raise ValueError(f"Unsupported effect: {effect_type}")
+
+    return decoders[effect_type]

@@ -5,6 +5,9 @@ numpy
 scipy
 scikit-image
 celery
-opencv-python
+opencv-python-headless
 Pillow
 pydantic-settings
+cryptography
+python-dotenv
+redis
