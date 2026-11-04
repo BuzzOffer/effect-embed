@@ -10,7 +10,7 @@ def apply_jpeg_compression(image_bytes: bytes, quality: int) -> bytes:
     if img.mode in ("RGBA", "P"):
         img = img.convert("RGB")
 
-    img.save(output_buffer, format="JPEG", quality=quality)
+    img.save(output_buffer, format="JPEG", quality=quality, subsampling=0)
     return output_buffer.getvalue()
 
 def apply_gaussian_noise(image_bytes: bytes, mean=0, stddev=25) -> bytes:
