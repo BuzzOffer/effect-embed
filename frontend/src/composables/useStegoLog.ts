@@ -1,5 +1,5 @@
 import { StegoLogService } from "@/services/stegoLogService"
-import type { StegoLog, StegoLogCreation } from "@/types/stego"
+import type { StegoLog } from "@/types/stego"
 import { ref } from "vue"
 
 export function useStegoLog() {
