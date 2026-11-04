@@ -2,11 +2,11 @@
     <div class="view-base">
         <h1 class="page-header pb-10">Stego Logs</h1>
         <div class="flex flex-row gap-3 mb-5">
-            <select v-model="selectedStegoType" class="input-base w-sm"">
+            <select v-model="selectedStegoType" class="input-base w-sm">
                 <option value="">All Types</option>
                 <option v-for="type in stegoTypes" :value="type">{{ capitalizeString(type) }}</option>
             </select>
-            <select v-model="selectedEffect" class="input-base w-sm"">
+            <select v-model="selectedEffect" class="input-base w-sm">
                 <option value="">All Effects</option>
                 <option v-for="effect in effects" :value="effect.name">{{ capitalizeString(effect.name) }}</option>
             </select>
