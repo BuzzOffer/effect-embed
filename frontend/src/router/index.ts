@@ -3,6 +3,7 @@ import EffectsView from '@/views/EffectsView.vue'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import StegoLogs from '@/views/StegoLogs.vue'
+import TestResults from '@/views/TestResults.vue'
 import TestView from '@/views/TestView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -47,6 +48,15 @@ const routes = [
     path: '/tests',
     name: 'tests',
     component: TestView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/tests/result/:id',
+    name: 'test-result',
+    component: TestResults,
+    props: true,
     meta: {
       requiresAuth: true
     }
