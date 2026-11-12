@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.ui.unit)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
