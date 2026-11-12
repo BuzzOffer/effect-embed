@@ -11,9 +11,9 @@
                 <option v-for="effect in effects" :value="effect.name">{{ capitalizeString(effect.name) }}</option>
             </select>
         </div>
-        <table v-if="!loading && filteredLogs.length !== 0"  class="border border-slate-50 bg-slate-100">
-            <thead class="bg-slate-200">
-                <tr class="border border-slate-50">
+        <table v-if="!loading && filteredLogs.length !== 0"  class="border border-background bg-surface">
+            <thead class="bg-primary">
+                <tr class="border">
                     <th class="table-cell">ID</th>
                     <th class="table-cell">User ID</th>
                     <th class="table-cell">Effect</th>
@@ -33,7 +33,7 @@
                     <td class="table-cell">{{ formatTimestamp(log.created_at) }}</td>
                     <td class="table-cell">
                         <button class="cursor-pointer" @click="openDelete(log.id)">
-                            <i class="fi fi-rs-trash text-red-500"></i>
+                            <i class="fi fi-rs-trash text-error hover:text-error/80 active:text-error/90"></i>
                         </button>
                     </td>
                 </tr>
@@ -43,8 +43,8 @@
             <p>No stego logs found.</p>
         </div>
     </div>
-    <dialog ref="deleteDialog" class="justify-self-center self-center rounded-xl">
-        <div class="bg-slate-50 p-10 rounded-xl">
+    <!-- <dialog ref="deleteDialog" class="justify-self-center self-center rounded-xl">
+        <div class="bg-surface p-10 rounded-xl">
             <h1 class="text-2xl font-bold m-4">Are you sure you want to delete this stego log?</h1>
             <p class="text-lg mx-4 my-2">The changes cannot be undone.</p>
             <div class="flex flex-row justify-end gap-4">
@@ -52,14 +52,16 @@
                 <button class="red-button-base" @click="handleDelete">Yes</button>
             </div>
         </div>
-    </dialog>
+    </dialog> -->
+    <DialogBox v-model="showDeleteDialog" variant="confirm" title="Delete Stego Log" message="Are you sure you want to delete this stego log? The changes cannot be undone." confirm-label="Delete" @confirm="handleDelete" />
 
     <div v-if="loading" class="fixed inset-0 bg-black opacity-50 flex items-center justify-center z-50">
-        <i class="fi fi-br-spinner animate-spin text-blue-800 text-9xl"></i>
+        <i class="fi fi-br-spinner animate-spin text-primary text-9xl"></i>
     </div>
 </template>
 
 <script setup lang="ts">
+import DialogBox from '@/components/DialogBox.vue';
 import { useEffects } from '@/composables/useEffects';
 import { useStegoLog } from '@/composables/useStegoLog';
 import { capitalizeString, formatTimestamp } from '@/utils/helpers';
@@ -68,7 +70,8 @@ import { onMounted, ref, computed } from 'vue';
 const { stego_logs, stego_log, loading, error, fetchStegoLogs, deleteStegoLog } = useStegoLog()
 const { effects, fetchEffects } = useEffects()
 
-const deleteDialog = ref<HTMLDialogElement | null>(null)
+// const deleteDialog = ref<HTMLDialogElement | null>(null)
+const showDeleteDialog = ref(false)
 const deletingLogId = ref<string>('')
 const selectedStegoType = ref('')
 const selectedEffect = ref('')
@@ -95,12 +98,12 @@ onMounted(async () => {
 
 const openDelete = (id: string) => {
     deletingLogId.value = id
-    deleteDialog.value?.showModal()
+    showDeleteDialog.value = true
 }
 
 const cancelDelete = () => {
     deletingLogId.value = ''
-    deleteDialog.value?.close()
+    showDeleteDialog.value = false
 }
 
 const handleDelete = async () => {

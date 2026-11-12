@@ -1,7 +1,6 @@
-import pool from "../config/database.ts"
+import type { PoolClient } from "pg"
 
-export const getEffectsService = async () => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const getEffectsService = async (dbClient: PoolClient) => {
     try {
         const result = await dbClient.query(`SELECT * FROM effects`)
         const effectList = result.rows
@@ -27,13 +26,10 @@ export const getEffectsService = async () => {
             message: "Get effect service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
 
-export const createEffectService = async (reqBody: any) => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const createEffectService = async (dbClient: PoolClient, reqBody: any) => {
     try {
         const { name } = reqBody
         const result = await dbClient.query(`INSERT INTO effects (name) VALUES ($1) RETURNING *`, [name])
@@ -48,22 +44,19 @@ export const createEffectService = async (reqBody: any) => {
         }
         return {
             success: true,
-            message: "Get effect service successful",
+            message: "Create effect service successful",
             data: effect
         }
     } catch (error) {
         return {
             success: false,
-            message: "Get effect service error",
+            message: "Create effect service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
 
-export const updateEffectService = async (id: string, reqBody: any) => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const updateEffectService = async (dbClient: PoolClient, id: string, reqBody: any) => {
     try {
         const { name } = reqBody
         const result = await dbClient.query(`UPDATE effects SET name = $1 WHERE id = $2 RETURNING *`, [name, id])
@@ -73,7 +66,7 @@ export const updateEffectService = async (id: string, reqBody: any) => {
             return {
                 success: false,
                 message: "Error updating effect",
-                error: "Error updating effect"
+                error: "Effect does not exist"
             }
         }
         return {
@@ -87,15 +80,12 @@ export const updateEffectService = async (id: string, reqBody: any) => {
             message: "Update effect service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }
 
-export const deleteEffectService = async (id: string) => {
-    const dbClient = await pool.connect() //TODO: turn this to middleware when auth is implemented
+export const deleteEffectService = async (dbClient: PoolClient, id: string) => {
     try {
-        const result = await dbClient.query(`DELETE FROM effects WHERE id = $1`, [id])
+        const result = await dbClient.query(`DELETE FROM effects WHERE id = $1 RETURNING *`, [id])
         const effect = result.rows[0]
 
         if (result.rowCount === 0) {
@@ -116,7 +106,5 @@ export const deleteEffectService = async (id: string) => {
             message: "Delete effect service error",
             error
         }
-    } finally {
-        dbClient.release()
     }
 }

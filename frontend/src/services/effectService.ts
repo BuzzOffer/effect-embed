@@ -1,4 +1,5 @@
 import type { EffectCreation, EffectListResponse, EffectResponse } from "@/types/effect"
+import { getAuthHeaders, handleResponse } from "@/utils/api"
 
 export class EffectService {
     private baseEffectUrl: string
@@ -13,57 +14,36 @@ export class EffectService {
         this.baseEffectUrl = `${apiBaseUrl}/effects`
     }
 
-    private async handleResponse(response: Response): Promise<any> {
-        if (!response.ok) {
-            if (response.status === 401) {
-                //Handle unauthorized access
-                throw new Error('Unauthorized access')
-            }
-            
-            const errorData = await response.json().catch(() => ({}))
-            throw new Error(errorData.message || `HTTP error! Status: ${response.status}`)
-        }
-        return response.json()
-    }
-
     async getEffectList(): Promise<EffectListResponse> {
         const response = await fetch(`${this.baseEffectUrl}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
         })
-        return this.handleResponse(response)
+        return handleResponse(response)
     }
 
     async createEffect(effect: EffectCreation): Promise<EffectResponse> {
         const response = await fetch(`${this.baseEffectUrl}/create`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify(effect)
         })
-        return this.handleResponse(response)
+        return handleResponse(response)
     }
 
     async updateEffect(id: string, effect: EffectCreation): Promise<EffectResponse> {
         const response = await fetch(`${this.baseEffectUrl}/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify(effect)
         })
-        return this.handleResponse(response)
+        return handleResponse(response)
     }
 
     async deleteEffect(id: string): Promise<EffectResponse> {
         const response = await fetch(`${this.baseEffectUrl}/${id}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
         })
-        return this.handleResponse(response)
+        return handleResponse(response)
     }
 }

@@ -1,9 +1,17 @@
-import { Pool } from '../../node_modules/@types/pg/index.js';
+import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config()
 
-const pool = new Pool({
+export const poolAdmin = new Pool({
+    host: process.env.POSTGRES_HOST,
+    port: 5432,
+    database: process.env.DATABASE_NAME,
+    user: process.env.POSTGRES_ADMIN,
+    password: process.env.POSTGRES_ADMIN_PASSWORD
+})
+
+export const pool = new Pool({
     host: process.env.POSTGRES_HOST,
     port: 5432,
     database: process.env.DATABASE_NAME,
@@ -18,5 +26,3 @@ pool.connect((err, client, release) => {
     console.log('Database connected successfully');
     release();
 });
-
-export default pool

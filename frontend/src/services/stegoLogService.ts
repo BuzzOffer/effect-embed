@@ -1,4 +1,5 @@
-import type { StegoLogCreation, StegoLogListResponse, StegoLogResponse } from "@/types/stego"
+import type { StegoLogListResponse, StegoLogResponse } from "@/types/stego"
+import { getAuthHeaders, handleResponse } from "@/utils/api"
 
 export class StegoLogService {
     private baseStegoUrl: string
@@ -13,44 +14,25 @@ export class StegoLogService {
         this.baseStegoUrl = `${apiBaseUrl}/stego`
     }
 
-    private async handleResponse(response: Response): Promise<any> {
-        if (!response.ok) {
-            if (response.status === 401) {
-                //Handle unauthorized access
-                throw new Error('Unauthorized access')
-            }
-            
-            const errorData = await response.json().catch(() => ({}))
-            throw new Error(errorData.message || `HTTP error! Status: ${response.status}`)
-        }
-        return response.json()
-    }
-
     async getStegoLogList(): Promise<StegoLogListResponse> {
         const response = await fetch(`${this.baseStegoUrl}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
         })
-        return this.handleResponse(response)
+        return handleResponse(response)
     }
 
     async getStegoLogById(id: string): Promise<StegoLogResponse> {
         const response = await fetch(`${this.baseStegoUrl}/${id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
         })
-        return this.handleResponse(response)
+        return handleResponse(response)
     }
 
     async deleteStegoLog(id: string): Promise<StegoLogResponse> {
         const response = await fetch(`${this.baseStegoUrl}/${id}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
         })
-        return this.handleResponse(response)
+        return handleResponse(response)
     }
 }
