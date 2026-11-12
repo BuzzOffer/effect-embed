@@ -1,7 +1,6 @@
 package com.example.effectembed.core.network
 
-import kotlinx.serialization.json.JsonElement
-
+import com.google.gson.JsonElement
 data class NetworkResponse(
     val success: Boolean,
     val message: String,

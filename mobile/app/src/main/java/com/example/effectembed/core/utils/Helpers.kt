@@ -3,15 +3,14 @@ package com.example.effectembed.core.utils
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import com.example.effectembed.auth.model.UserInfo
+import com.google.gson.Gson
+import com.google.gson.JsonElement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonObject
 
 suspend fun saveToGallery(context: Context, bitmap: Bitmap): Boolean {
     return withContext(Dispatchers.IO) {
@@ -50,15 +49,30 @@ suspend fun saveToGallery(context: Context, bitmap: Bitmap): Boolean {
 }
 
 fun extractUserInfo(data: Any?): UserInfo? {
+    Log.d("EXTRACT FUNC", "Success in function")
     try {
+        Log.d("EXTRACT FUNC", "Success in try-block")
         //cast dynamic data to a JsonElement
         val jsonElement = data as? JsonElement ?: return null
-        val jsonObject = jsonElement.jsonObject
-        //look for the user key
-        val userJson = jsonObject["user"] ?: return null
+        val jsonObject = jsonElement.asJsonObject
 
-        return Json.decodeFromJsonElement<UserInfo>(UserInfo.serializer(), userJson)
+        //look for the user key
+        val userJson = jsonObject.getAsJsonObject("user") ?: return null
+        val token = jsonObject.get("token") ?: return null
+
+        userJson.add("token", token)
+
+//        val combinedMap = userJson.toMutableMap().apply {
+//            put("token", token)
+//        }
+//        val combinedJsonObject = JsonObject(combinedMap)
+//        Log.d("COMBINED MAP", combinedMap.toString())
+//        Log.d("COMBINED JSON OBJ", combinedJsonObject.toString())
+//        Log.d("JSON DECODED", Json.decodeFromJsonElement(combinedJsonObject))
+        return Gson().fromJson(userJson, UserInfo::class.java)
     } catch (e: Exception) {
+        Log.d("EXTRACT FUNC", "Success in catch-block")
+        Log.e("EXTRACT FAIL", e.toString())
         e.printStackTrace()
         return null
     }
