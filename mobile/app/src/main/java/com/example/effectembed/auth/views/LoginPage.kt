@@ -1,20 +1,25 @@
 package com.example.effectembed.auth.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,21 +29,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.effectembed.R
+import com.example.effectembed.auth.model.UserInfo
+import com.example.effectembed.core.utils.Resource
 import com.example.effectembed.ui.theme.displayFontFamily
 @Composable
 fun LoginPage(
     onNavigateToRegister: () -> Unit,
+    onLoginClicked: () -> Unit,
+    goToHome: () -> Unit,
+    loginState: Resource<UserInfo?>,
+    errorText: String,
+    emailState: TextFieldState,
+    passwordState: TextFieldState
 ) {
-    val email = rememberTextFieldState(initialText = "")
-    val password = rememberTextFieldState(initialText = "")
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,23 +99,25 @@ fun LoginPage(
                 color = Color.White,
             )
             OutlinedTextField(
-                state = email,
+                state = emailState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 label = { Text("Email", color = Color.White) },
+                textStyle = TextStyle(color = Color.White),
                 leadingIcon = { Icon(painter = painterResource(R.drawable.outline_email_24), contentDescription = "Email logo", tint = Color.White)}
             )
             OutlinedTextField(
-                state = password,
+                state = passwordState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 label = { Text("Password", color = Color.White) },
-                leadingIcon = { Icon(painter = painterResource(R.drawable.outline_password_24), contentDescription = "Password logo", tint = Color.White)}
+                textStyle = TextStyle(color = Color.White),
+                leadingIcon = { Icon(painter = painterResource(R.drawable.outline_password_24), contentDescription = "Password logo", tint = Color.White)},
             )
             Button(
-                onClick = { },
+                onClick = { onLoginClicked() },
                 modifier = Modifier.padding(8.dp),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -143,6 +157,36 @@ fun LoginPage(
                 fontSize = 18.sp,
                 modifier = Modifier.padding(16.dp)
             )
+            if (errorText != "") {
+                Text(
+                    text = errorText,
+                    color = Color.Red,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+    when (loginState) {
+        is Resource.Idle -> {
+
+        }
+        is Resource.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable(enabled = false) {}, // Blocks ghost clicks
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Color.White)
+            }
+        }
+        is Resource.Success -> {
+            goToHome()
+        }
+        is Resource.Failure -> {
+
         }
     }
 }
@@ -151,6 +195,12 @@ fun LoginPage(
 @Composable
 fun PreviewLoginPage() {
     LoginPage(
-        onNavigateToRegister = {}
+        onNavigateToRegister = {},
+        onLoginClicked = {},
+        goToHome = {},
+        loginState = Resource.Idle,
+        errorText = "",
+        emailState = TextFieldState(initialText = "hawyee@gmail.com"),
+        passwordState = TextFieldState(initialText = "hawyee123")
     )
 }

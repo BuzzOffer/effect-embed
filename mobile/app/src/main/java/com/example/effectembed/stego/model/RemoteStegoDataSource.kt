@@ -6,10 +6,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RemoteStegoDataSource @Inject constructor(private val apiService: StegoApiService) {
-    suspend fun getEffects(): Result<NetworkResponse> {
+    suspend fun getEffects(token: String?): Result<NetworkResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getEffects()
+                val response = apiService.getEffects(token)
                 if (response.isSuccessful && response.body() != null) {
                     Result.success(response.body()!!)
                 } else {
@@ -21,13 +21,13 @@ class RemoteStegoDataSource @Inject constructor(private val apiService: StegoApi
         }
     }
 
-    suspend fun createStegoLog(userId: String, effectName: String, type: String, timeTaken: Number): Result<NetworkResponse> {
+    suspend fun createStegoLog(token: String?, userId: String, effectName: String, type: String, timeTaken: Number): Result<NetworkResponse> {
         return withContext(Dispatchers.IO) {
             try {
                 val requestData = StegoLogCreation(
                     userId, effectName, type, timeTaken
                 )
-                val response = apiService.createStegoLog(requestData)
+                val response = apiService.createStegoLog(token, requestData)
                 if (response.isSuccessful && response.body() != null) {
                     Result.success(response.body()!!)
                 } else {

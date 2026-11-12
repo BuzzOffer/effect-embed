@@ -9,7 +9,7 @@ import com.example.effectembed.stego.domain.StegoEngine
 import com.example.effectembed.stego.effects.CollageStego
 import com.example.effectembed.stego.effects.GlitchStego
 import com.example.effectembed.stego.effects.StegoEffect
-import com.example.effectembed.stego.model.StegoRepository
+import com.example.effectembed.stego.model.IStegoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 import kotlin.time.measureTimedValue
 
 @HiltViewModel
-class ExtractViewModel @Inject constructor(private val repository: StegoRepository) : ViewModel() {
+class ExtractViewModel @Inject constructor(private val repository: IStegoRepository) : ViewModel() {
     private var _selectedImage = MutableStateFlow<Bitmap?>(null)
     val selectedImage = _selectedImage.asStateFlow()
 
