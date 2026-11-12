@@ -49,8 +49,6 @@ const submitCredentials = async () => {
         email: email.value,
         password: password.value,
     }
-    console.log(credentials)
-    console.log(rememberMe.value)
     await login(credentials, rememberMe.value)
 }
 
