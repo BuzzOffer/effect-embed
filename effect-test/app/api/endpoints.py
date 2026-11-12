@@ -4,23 +4,32 @@ from celery.result import AsyncResult
 from app.core.celery_app import celery_app
 from app.tasks.worker import run_testing_pipeline
 
+import json
+
 router = APIRouter()
 
 @router.post("/test")
 async def start_test(
     stego_image: UploadFile = File(...),
     expected_payload: str = Form(...),
-    effect_type: str = Form(...)
+    effect_type: str = Form(...),
+    attacks: str = Form(...)
 ):
     if stego_image.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(status_code=400, detail="Invalid stego image format.")
+
+    try:
+        selected_attacks = json.loads(attacks)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid attacks configuration")
     
     stego_bytes = await stego_image.read()
 
     task = run_testing_pipeline.delay(
         stego_bytes,
         expected_payload,
-        effect_type
+        effect_type,
+        selected_attacks
     )
 
     return {"task_id": task.id, "status": "Task enqueued"}

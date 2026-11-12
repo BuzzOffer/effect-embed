@@ -11,6 +11,7 @@ export type TestInfo = {
 
 export type RobustnessResult = {
     attack: string;
+    details: string;
     ber: number;
     decoded_payload: string;
     success: boolean
