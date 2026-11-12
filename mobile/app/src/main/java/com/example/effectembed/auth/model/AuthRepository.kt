@@ -1,14 +1,16 @@
 package com.example.effectembed.auth.model
 
 import androidx.datastore.core.DataStore
+import com.example.effectembed.core.network.NetworkResponse
 import com.example.effectembed.core.utils.extractUserInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import android.util.Log
 
 interface IAuthRepository {
     val currentUser: Flow<UserInfo?>
-    suspend fun loginUser(email: String, password: String): Result<UserInfo>
+    suspend fun loginUser(email: String, password: String): Result<NetworkResponse>
 }
 
 class AuthRepository @Inject constructor(
@@ -19,7 +21,7 @@ class AuthRepository @Inject constructor(
         if (userInfo.id.isBlank()) null else userInfo
     }
 
-    override suspend fun loginUser(email: String, password: String): Result<UserInfo> {
+    override suspend fun loginUser(email: String, password: String): Result<NetworkResponse> {
         val result = remoteDataSource.loginUser(email, password)
 
         return result.fold(
@@ -30,9 +32,9 @@ class AuthRepository @Inject constructor(
                         dataStore.updateData { info ->
                             userInfo
                         }
-                        Result.success(userInfo)
+                        Result.success(response)
                     } else {
-                        Result.failure(Exception("No user object found"))
+                        Result.failure(Exception(response.message))
                     }
                 } else {
                     Result.failure(Exception(response.message))
