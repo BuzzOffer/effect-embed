@@ -19,6 +19,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.effectembed.auth.viewmodels.LoginViewModel
 import com.example.effectembed.auth.views.LoginPage
 import com.example.effectembed.auth.views.RegisterPage
 import com.example.effectembed.composables.AppBar
@@ -77,8 +78,15 @@ fun Navigation() {
                 .padding(bottom = innerPadding.calculateTopPadding())
         ) {
             composable<LoginPage> {
+                val viewModel = hiltViewModel<LoginViewModel>()
                 LoginPage(
-                    onNavigateToRegister = {navController.navigate(route = RegisterPage) }
+                    onNavigateToRegister = { navController.navigate(route = RegisterPage) },
+                    onLoginClicked = { viewModel.login() },
+                    goToHome = { navController.navigate(route = Home) },
+                    loginState = viewModel.loginState.collectAsStateWithLifecycle().value,
+                    errorText = viewModel.errorText.collectAsStateWithLifecycle().value,
+                    emailState = viewModel.emailState,
+                    passwordState = viewModel.passwordState
                 )
             }
             composable<RegisterPage> {
